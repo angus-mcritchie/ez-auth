@@ -9,6 +9,7 @@ class Auth
 {
 	protected string $tokenCookieName = 'ez_auth_token';
 	protected string $algorithm = 'HS256';
+	protected ?User $user = null;
 	protected ?string $server = null;
 	protected ?string $secret = null;
 
