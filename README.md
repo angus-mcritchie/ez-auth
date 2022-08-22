@@ -8,7 +8,7 @@ Installation
 Use composer to manage your dependencies and download EZ Auth Client:
 
 ```bash
-composer require angus_mcritchie/ez-auth-client
+composer require gooby/ez-auth-client
 ```
 
 Setup
@@ -22,9 +22,9 @@ EZ_AUTH_CLIENT_SERVER="https://auth.my-ez-auth-server.com"
 Example
 -------
 ```php
-use EzAuthClient\Auth;
-use EzAuthClient\User;
-use EzAuthClient\JwtDecodeException;
+use Gooby\EzAuthClient\Auth;
+use Gooby\EzAuthClient\User;
+use Gooby\EzAuthClient\JwtDecodeException;
 
 $client = new Auth();
 $user = null;
