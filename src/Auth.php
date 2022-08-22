@@ -1,6 +1,6 @@
 <?php
 
-namespace EzAuthClient;
+namespace Gooby\AuthClient;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;

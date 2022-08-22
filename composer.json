@@ -1,6 +1,6 @@
 {
-    "name": "angus_mcritchie/ez-auth-client",
-    "description": "Client for using the ez-auth-server to enable SSO across multiple sub domains with JWTs.",
+    "name": "gooby/ez-auth-client",
+    "description": "Client for using the gooby/ez-auth-server to enable SSO across multiple sub domains with JWTs.",
     "homepage": "https://github.com/angus_mcritchie/ez-auth-client",
     "authors": [
         {
@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "EzAuthClient\\": "src"
+            "Gooby\\AuthClient\\": "src"
         }
     }
 }
