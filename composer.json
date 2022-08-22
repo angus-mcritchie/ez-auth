@@ -1,0 +1,26 @@
+{
+    "name": "angus_mcritchie/ez-auth-client",
+    "description": "Client for using the ez-auth-server to enable SSO across multiple sub domains with JWTs.",
+    "homepage": "https://github.com/angus_mcritchie/ez-auth-client",
+    "authors": [
+        {
+            "name": "Angus McRitchie",
+            "email": "ajmcritchie@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "keywords": [
+        "php",
+        "jwt",
+        "sso"
+    ],
+    "require": {
+        "php": ">=7.4",
+        "firebase/php-jwt": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "EzAuthClient\\": "src"
+        }
+    }
+}
