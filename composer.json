@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Gooby\\AuthClient\\": "src"
+            "Gooby\\EzAuthClient\\": "src"
         }
     }
 }

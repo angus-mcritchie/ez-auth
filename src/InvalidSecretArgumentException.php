@@ -1,6 +1,6 @@
 <?php
 
-namespace Gooby\AuthClient;
+namespace Gooby\EzAuthClient;
 
 class InvalidSecretArgumentException extends \InvalidArgumentException
 {
