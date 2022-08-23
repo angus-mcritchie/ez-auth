@@ -19,26 +19,38 @@ EZ_AUTH_CLIENT_SECRET="my-shared-secret-here"
 EZ_AUTH_CLIENT_SERVER="https://auth.my-ez-auth-server.com"
 ```
 
+Quick Start
+-------
+```php
+<?php
+
+$auth = new Gooby\EzAuthClient\Auth();
+$user = $auth->getUserOrLogin();
+
+echo "You're logged in and your ID is {$user->id}";
+```
+
 Example
 -------
 ```php
+<?php
+
 use Gooby\EzAuthClient\Auth;
-use Gooby\EzAuthClient\User;
 use Gooby\EzAuthClient\JwtDecodeException;
 
 $client = new Auth();
-$user = null;
 
 try {
-    $user = $client->getUser();
-} catch (JwtDecodeException $e) {
-    // Invalid token, or bad secret
-    // log message, etc
-}
 
-if( ! $client->isAuthenticated() ) {
+    $user = $client->getUser();
+
+} catch (JwtDecodeException $e) {
+
+    // Invalid token, or bad secret
+    MyApp::logFailedLoginAttempt('Invalid Token: ' . $e->getMessage());
+
+    // Redirect request to login page
     $client->login();
 }
 
-// user is logged in
-$userId = $user->id();
+echo "You're logged in and your ID is {$user->id}";
