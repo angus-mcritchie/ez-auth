@@ -35,23 +35,24 @@ class User
 		}
 	}
 
-	public function roleIsOneOf(array $roles): bool
-	{
-		foreach ($roles as $role) {
-			if ($this->roleIs($role)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public function roleIs(string $role): bool
+	/**
+	 * Checks if user has the given role
+	 *
+	 * @param string|array $roles string or an array of strings
+	 * @return boolean
+	 */
+	public function hasRole(mixed $roles): bool
 	{
 		if (!isset($this->role)) {
 			return false;
 		}
 
-		return strtolower($this->role) === strtolower($role);
+		foreach ((array) $roles as $role) {
+			if (strtolower($this->role) === strtolower($role)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
