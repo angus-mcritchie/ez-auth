@@ -4,11 +4,11 @@ namespace Gooby\EzAuthClient;
 
 class User
 {
-	protected int $id;
-	protected ?string $username = null;
-	protected ?string $firstName = null;
-	protected ?string $lastName = null;
-	protected ?string $email = null;
+	public int $id;
+	public ?string $username = null;
+	public ?string $firstName = null;
+	public ?string $lastName = null;
+	public ?string $email = null;
 
 	/**
 	 * Pass the decoded JWT to the constructor \
@@ -25,51 +25,12 @@ class User
 	public function __construct(object $payload)
 	{
 		$this->id = (int) $payload->sub;
+		$optional = ['username', 'firstName', 'lastName', 'email'];
 
-		if (isset($payload->username)) {
-			$this->username = (string) $payload->username;
+		foreach ($optional as $key) {
+			if (isset($payload->$key)) {
+				$this->$key = (string) $payload->$key;
+			}
 		}
-
-		if (isset($payload->firstName)) {
-			$this->firstName = (string) $payload->firstName;
-		}
-
-		if (isset($payload->lastName)) {
-			$this->lastName = (string) $payload->lastName;
-		}
-
-		if (isset($payload->email)) {
-			$this->email = (string) $payload->email;
-		}
-	}
-
-	public function id(): int
-	{
-		return $this->id;
-	}
-
-	public function username(): ?string
-	{
-		return $this->username;
-	}
-
-	public function firstName(): ?string
-	{
-		return $this->firstName;
-	}
-
-	public function lastName(): ?string
-	{
-		return $this->lastName;
-	}
-
-	public function email(): ?string
-	{
-		return $this->email;
-	}
-
-	public function toJson(): string
-	{
-		return json_encode($this);
 	}
 }
