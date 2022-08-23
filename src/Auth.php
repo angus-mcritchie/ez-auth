@@ -85,7 +85,13 @@ class Auth
 	public function getUserOrLogin(): User
 	{
 		try {
-			return $this->getUser();
+			$user = $this->getUser();
+
+			if ($user) {
+				return $user;
+			} else {
+				$this->login();
+			}
 		} catch (JwtDecodeException $e) {
 			$this->login();
 		}
