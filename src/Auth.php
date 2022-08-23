@@ -78,6 +78,21 @@ class Auth
 
 
 	/**
+	 * Gets the authenticated User or redirect's the request to the login page on your EZ Auth Server
+	 *
+	 * @return User
+	 */
+	public function getUserOrLogin(): User
+	{
+		try {
+			return $this->getUser();
+		} catch (JwtDecodeException $e) {
+			$this->login();
+		}
+	}
+
+
+	/**
 	 * Check if the user is authenticated
 	 * 
 	 * @throws JwtDecodeException if the token is invalid
