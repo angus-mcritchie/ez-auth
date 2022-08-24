@@ -65,7 +65,7 @@ class Auth
 	 */
 	public function forbidden(array $roles)
 	{
-		header("Location: {$this->server}/forbidden?roles=" . http_build_query(compact('roles')));
+		header("Location: {$this->server}/forbidden?roles=" . http_build_query(compact('roles')) . "&redirectTo=" . urlencode($this->getCurrentUrl()));
 		exit;
 	}
 
