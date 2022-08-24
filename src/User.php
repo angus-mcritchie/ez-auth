@@ -5,40 +5,31 @@ namespace Gooby\EzAuthClient;
 class User
 {
 	private Auth $auth;
+	private object $payload;
 	public int $id;
-	public ?string $username = null;
-	public ?string $firstName = null;
-	public ?string $lastName = null;
-	public ?string $email = null;
-	public ?string $role = null;
+	public string $role = 'default';
 
 	/**
-	 * Pass the decoded JWT to the constructor \
-	 * Schema of the $payload object: \
-	 * $payload->sub int The user's ID \
-	 * $payload->username string The user's username \
-	 * $payload->firstName string The user's first name \
-	 * $payload->lastName string The user's last name \
-	 * $payload->email string The user's email
-	 * $payload->role string The user's role
 	 * 
-	 * @param object $payload (see above)
+	 * @param object $payload raw payload of the JWT
+	 * @param Auth $auth
 	 * @return void
 	 */
 	public function __construct(object $payload, Auth $auth)
 	{
-		$this->id = (int) $payload->sub;
 		$this->auth = $auth;
+		$this->payload = $payload;
+		$this->id = (int) $payload->sub;
+		$this->role = $payload->role ?? 'default';
+	}
 
-		foreach (['username', 'firstName', 'lastName', 'email', 'role'] as $key) {
-			if (isset($payload->$key) && gettype($payload->$key) === 'string') {
-				$this->$key = (string) $payload->$key;
-			}
-		}
+	public function __get(string $key)
+	{
+		return isset($this->payload->$key) ? $this->payload->$key : null;
 	}
 
 	/**
-	 * Checks if user has the given role
+	 * Checks if user's role is in the provided array
 	 *
 	 * @param array $roles array of strings
 	 * @return boolean
