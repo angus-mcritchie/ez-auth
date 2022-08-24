@@ -2,6 +2,7 @@
     "name": "gooby/ez-auth-client",
     "description": "Client for using the gooby/ez-auth-server to enable SSO across multiple sub domains with JWTs.",
     "homepage": "https://github.com/angus_mcritchie/ez-auth-client",
+    "license": "MIT",
     "authors": [
         {
             "name": "Angus McRitchie",
