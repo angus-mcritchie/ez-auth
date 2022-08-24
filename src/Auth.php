@@ -13,6 +13,16 @@ class Auth
 	protected ?string $server = null;
 	protected ?string $secret = null;
 
+	static public function fromEnv(): Auth
+	{
+		return new Auth();
+	}
+
+	static public function fromConfig(array $config): Auth
+	{
+		return new Auth($config);
+	}
+
 	/**
 	 *  $config['secret'] string The secret to decode the JWT - defaults to getenv('EZ_AUTH_CLIENT_SECRET')
 	 *  $config['secret'] string The EZ Auth Server's URL e.g. https://auth.example.com - defaults to getenv('EZ_AUTH_CLIENT_SERVER')
