@@ -40,16 +40,16 @@ class User
 	/**
 	 * Checks if user has the given role
 	 *
-	 * @param string|array $roles string or an array of strings
+	 * @param array $roles array of strings
 	 * @return boolean
 	 */
-	public function hasRole(mixed $roles): bool
+	public function hasRole(array $roles): bool
 	{
 		if (!isset($this->role)) {
 			return false;
 		}
 
-		foreach ((array) $roles as $role) {
+		foreach ($roles as $role) {
 			if (strtolower($this->role) === strtolower($role)) {
 				return true;
 			}
@@ -61,13 +61,13 @@ class User
 	/**
 	 * Checks if user has the given permission and redirects them to the Auth server if they don't
 	 *
-	 * @param string|array $roles string or an array of strings
+	 * @param array $roles array of strings
 	 * @return boolean
 	 */
-	public function hasRoleOrForbidden(mixed $roles): void
+	public function hasRoleOrForbidden(array $roles): void
 	{
 		if (!$this->hasRole($roles)) {
-			$this->auth->forbidden((array) $roles);
+			$this->auth->forbidden($roles);
 		}
 	}
 }
