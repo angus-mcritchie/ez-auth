@@ -4,6 +4,7 @@ namespace Gooby\EzAuthClient;
 
 class User
 {
+	private Auth $auth;
 	public int $id;
 	public ?string $username = null;
 	public ?string $firstName = null;
@@ -24,9 +25,10 @@ class User
 	 * @param object $payload (see above)
 	 * @return void
 	 */
-	public function __construct(object $payload)
+	public function __construct(object $payload, Auth $auth)
 	{
 		$this->id = (int) $payload->sub;
+		$this->auth = $auth;
 
 		foreach (['username', 'firstName', 'lastName', 'email', 'role'] as $key) {
 			if (isset($payload->$key) && gettype($payload->$key) === 'string') {
@@ -54,5 +56,18 @@ class User
 		}
 
 		return false;
+	}
+
+	/**
+	 * Checks if user has the given permission and redirects them to the Auth server if they don't
+	 *
+	 * @param string|array $roles string or an array of strings
+	 * @return boolean
+	 */
+	public function hasRoleOrForbidden(mixed $roles): void
+	{
+		if (!$this->hasRole($roles)) {
+			$this->auth->forbidden((array) $roles);
+		}
 	}
 }

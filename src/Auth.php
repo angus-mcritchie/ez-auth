@@ -58,6 +58,19 @@ class Auth
 
 
 	/**
+	 * Redirects the request to the EZ Auth Server to display an access denied page with the option to login an another user
+	 * 
+	 * @param mixed $roles The roles that are permitted on the page
+	 * @return void
+	 */
+	public function forbidden(array $roles)
+	{
+		header("Location: {$this->server}/forbidden?roles=" . http_build_query(compact('roles')));
+		exit;
+	}
+
+
+	/**
 	 * Gets the authenticated User
 	 *
 	 * @throws JwtDecodeException if the token is invalid
@@ -69,7 +82,7 @@ class Auth
 			$payload = $this->getTokenPayload();
 
 			if ($payload) {
-				$this->user = new User($payload);
+				$this->user = new User($payload, $this);
 			}
 		}
 
