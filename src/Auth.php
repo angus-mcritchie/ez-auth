@@ -26,10 +26,10 @@ class Auth
 	/**
 	 *  $config['secret'] string The secret to decode the JWT - defaults to getenv('EZ_AUTH_CLIENT_SECRET')
 	 *  $config['secret'] string The EZ Auth Server's URL e.g. https://auth.example.com - defaults to getenv('EZ_AUTH_CLIENT_SERVER')
-	 * 
+	 *
 	 *  @throws InvalidSecretArgumentException if the secret is invalid
 	 *  @throws InvalidServerArgumentException if the server is invalid
-	 * 
+	 *
 	 *  @param ?array $config (see above)
 	 */
 	public function __construct(?array $config = [])
@@ -49,34 +49,42 @@ class Auth
 	 */
 	public function logout(): void
 	{
-		header("Location: {$this->server}/logout");
-		exit;
+		$this->redirectTo("{$this->server}/logout");
 	}
 
 
 	/**
 	 * Redirects the request to the EZ Auth Server to login
-	 * 
+	 *
 	 * @param string $redirectTo The URL to redirect to after login - defaults to the current URL
 	 * @return void
 	 */
-	public function login(?string $redirectTo = null)
+	public function login(?string $redirectTo = null) :void
 	{
-		header("Location: {$this->server}/login?redirectTo=" . urlencode($redirectTo ?? $this->getCurrentUrl()));
-		exit;
+		$redirectTo = $redirectTo ?? $this->getCurrentUrl();
+
+		if(!$this->validateUrl($redirectTo)) {
+			$this->redirectTo("{$this->server}/login");
+		} else {
+			$this->redirectTo("{$this->server}/login?redirectTo=" . urlencode($redirectTo));
+		}
 	}
 
 
 	/**
 	 * Redirects the request to the EZ Auth Server to display an access denied page with the option to login an another user
-	 * 
+	 *
 	 * @param mixed $roles The roles that are permitted on the page
 	 * @return void
 	 */
 	public function forbidden(array $roles)
 	{
-		header("Location: {$this->server}/forbidden?roles=" . http_build_query(compact('roles')) . "&redirectTo=" . urlencode($this->getCurrentUrl()));
-		exit;
+		$query = http_build_query([
+			'roles' => array_filter($roles, [$this, 'validateRole']),
+			'redirectTo' => $this->getCurrentUrl()
+		]);
+
+		$this->redirectTo("{$this->server}/forbidden" . ($query ? '?' . $query : ''));
 	}
 
 
@@ -123,7 +131,7 @@ class Auth
 
 	/**
 	 * Check if the user is authenticated
-	 * 
+	 *
 	 * @throws JwtDecodeException if the token is invalid
 	 * @return bool
 	 */
@@ -188,7 +196,13 @@ class Auth
 			return null;
 		}
 
-		return "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+		$currentUrl = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+
+		if(!$this->validateUrl($currentUrl)) {
+			return null;
+		}
+
+		return $currentUrl;
 	}
 
 
@@ -208,7 +222,7 @@ class Auth
 			throw new InvalidServerArgumentException('Server must be a string');
 		}
 
-		if (!filter_var($this->server, FILTER_VALIDATE_URL)) {
+		if (!$this->validateUrl($this->server)) {
 			throw new InvalidServerArgumentException('Server must be a valid URL');
 		}
 	}
@@ -229,5 +243,34 @@ class Auth
 		if (gettype($this->secret) !== 'string') {
 			throw new InvalidSecretArgumentException('Secret must be a string');
 		}
+	}
+
+	private function redirectTo(string $url):void {
+		header("Location: {$url}");
+		exit;
+	}
+
+	/**
+	 * Validates a URL
+	 *
+	 * @param string|null $url
+	 * @return bool
+	 */
+	private function validateUrl(?string $url):bool {
+		return (bool) filter_var($url, FILTER_VALIDATE_URL);
+	}
+
+	/**
+	 * Validates a role to prevent header injection
+	 *
+	 * @param string|null $role
+	 * @return bool
+	 */
+	private function validateRole(string $role = null):bool {
+		if(!$role || gettype($role) !== 'string') {
+			return false;
+		}
+
+		return preg_match('/^[a-zA-Z0-9_- ]+$/', $role) === 1;
 	}
 }
